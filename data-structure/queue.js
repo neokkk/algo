@@ -1,8 +1,6 @@
 class Queue {
     constructor() {
         this._arr = [];
-        this.front;
-        this.back;
     }
 
     enqueue(data) {
@@ -12,18 +10,18 @@ class Queue {
     dequeue() {
         if (this._arr.length < 0) {
             console.log('This is Stack Underflow!');
-            return
+            return;
         }
 
         this._arr.shift();
     }
 
     front() {
-        return this._arr[this.front];
+        return this._arr[0];
     }
 
     back() {
-        return this._arr[this.back];
+        return this._arr[this._arr.length - 1];
     }
 
     clear() {
