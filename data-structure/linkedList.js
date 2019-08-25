@@ -1,19 +1,19 @@
 class Node {
-    constructor(element) {
-        this.element = element;
+    constructor(data) {
+        this.data = data;
         this.next = null;
     }
 }
 
 class LinkedList {
-    constructor() {
+    constructor(data) {
         this.head = new Node('head');
     }
 
     find(item) {
         let currentNode = this.head;
 
-        while (currentNode.element !== item) {
+        while (currentNode.data !== item) {
             currentNode = currentNode.next; // 발견 못하면 다음 노드로 넘어가기
         }
 
@@ -23,7 +23,7 @@ class LinkedList {
     findPrev(item) {
         let currentNode = this.head;
 
-        while (currentNode.next !== null && currentNode.next.element !== item) {
+        while (currentNode.next !== null && currentNode.next.data !== item) {
             currentNode = currentNode.next; // 다음 노드가 존재하면서 다음 노드의 값이 아닐 경우
         }
 
@@ -42,7 +42,7 @@ class LinkedList {
         let currentNode = this.head;
 
         while (currentNode.next !== null) {
-            console.log(currentNode.next.element);
+            console.log(currentNode.next.data);
             currentNode = currentNode.next;
         }
     }
