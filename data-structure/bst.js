@@ -6,9 +6,9 @@ class Node {
 	}
 }
 
-class Tree {
+class BinarySearchTree {
 	constructor(data) {
-		this.count = 0;
+		this.count = 1;
 		this.root = new Node(data);
 	}
 
@@ -36,38 +36,31 @@ class Tree {
 
 	find(data) {
 		if (!this.root) return null;
-		else return this._find(this.root, data);
+		
+		return this._find(this.root, data);
 	}
 
 	// recursion
-	_find(node, data) {
-		if (node) { // node 있으면
-			if (data < node.data) {
-				return this._find(node.left, data);
-			} else if (data > node.data) {
-				return this._find(node.right, data);
-			} else {
-				return node;
-			}
-		} else { // 없으면
-			return null;
-		}
+	_find(root, data) {
+		if (data < root.data) return this._find(root.left, data);
+		if (data > root.data) return this._find(root.right, data);
+			
+		return root;
 	}
 
 	remove(data) {
+		if (!root) return null;
+
 		const node = this._remove(this.root, data);
 
-		if (node) {
-			this.root = node;
-			this.count--;
-		}
+		this.root = node;
+		this.count--;
 	}
 
 	// recursion
 	_remove(root, data) {
 		let exchange, tmp;
 
-		if (!root) return false;
 		if (data < root.data) root.left = this._remove(root.left. data);
 		else if (data > root.data) root.right = this._remove(root.right, data);
 		else { // root.data === data

@@ -13,7 +13,7 @@ class Queue {
             return;
         }
 
-        this._arr.shift();
+        return this._arr.shift();
     }
 
     front() {

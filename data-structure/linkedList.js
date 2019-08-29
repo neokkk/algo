@@ -1,63 +1,78 @@
 class Node {
     constructor(data) {
         this.data = data;
-        this.next = null;
+        this.next;
     }
 }
 
 class LinkedList {
     constructor(data) {
-        this.head = new Node('head');
+        this.count = 1;
+        this.head = new Node(data);
     }
 
-    find(item) {
+    find(data) {
         let currentNode = this.head;
 
-        while (currentNode.data !== item) {
+        while (currentNode.data !== data) {
             currentNode = currentNode.next; // 발견 못하면 다음 노드로 넘어가기
         }
 
         return currentNode;
     }
 
-    findPrev(item) {
+    findPrev(data) {
         let currentNode = this.head;
 
-        while (currentNode.next !== null && currentNode.next.data !== item) {
+        while (currentNode.next && currentNode.next.data !== data) {
             currentNode = currentNode.next; // 다음 노드가 존재하면서 다음 노드의 값이 아닐 경우
         }
 
         return currentNode;
     }
 
-    insert(newElement, item) {
-        const newNode = new Node(newElement);
-        const currentNode = this.find(item);
+    insert(prevData, data) {
+        const newNode = new Node(data);
+        const currentNode = this.find(prevData);
 
         newNode.next = currentNode.next;
         currentNode.next = newNode;
+
+        this.count++;
     }
 
     display() {
         let currentNode = this.head;
 
-        while (currentNode.next !== null) {
-            console.log(currentNode.next.data);
+        console.log(currentNode.data);
+
+        while (currentNode.next) {
             currentNode = currentNode.next;
+            console.log(currentNode.data);
         }
     }
 
-    remove(item) {
-        const prevNode = this.findPrev(item);
+    remove(data) {
+        const prevNode = this.findPrev(data);
 
-        if (prevNode.next !== null) {
+        if (prevNode.next) {
             prevNode.next = prevNode.next.next;
+
+            this.count--;
         }
+    }
+
+    length() {
+        console.log(this.count);
+        return this.count;
     }
 }
 
-const linkedList = new LinkedList();
+const linkedList = new LinkedList('head');
 
-linkedList.insert('hello', 'head');
-linkedList.insert('data', 'hello');
+linkedList.insert('head', 'hello');
+linkedList.insert('hello', 'data');
+linkedList.insert('hello', 'pass');
+linkedList.remove('pass');
 linkedList.display();
+linkedList.length();

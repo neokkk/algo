@@ -12,7 +12,7 @@ class Stack {
     pop () {
         if (this.top <= -1) {
             console.log('This is Stack underflow!');
-            return
+            return false;
         } else {
             const popped = this._arr[this.top];
 
@@ -24,7 +24,7 @@ class Stack {
     }
 
     peek () {
-        console.log(this._arr[this.top]);
+        return this.arr[this.top];
     }
 
     clear() {
