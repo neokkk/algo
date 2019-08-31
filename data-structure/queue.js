@@ -16,14 +16,6 @@ class Queue {
         return this._arr.shift();
     }
 
-    front() {
-        return this._arr[0];
-    }
-
-    back() {
-        return this._arr[this._arr.length - 1];
-    }
-
     clear() {
         this._arr = [];
     }

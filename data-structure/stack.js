@@ -12,7 +12,7 @@ class Stack {
     pop () {
         if (this.top <= -1) {
             console.log('This is Stack underflow!');
-            return false;
+            return null;
         } else {
             const popped = this._arr[this.top];
 
