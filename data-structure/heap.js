@@ -36,7 +36,7 @@ class Heap { // max Heap
     /* recursion */
     _heapUp(index) {
         if (index) {
-            const parent = parseInt((index - 1) / 2); // 부모 node의 index
+            let parent = parseInt((index - 1) / 2); // 부모 node의 index
 
             if (this.arr[index] > this.arr[parent]) { // 부모 node 값보다 크면 교환
                 let tmp = this.arr[index];
@@ -49,7 +49,7 @@ class Heap { // max Heap
     }
 
     _heapDown(index) {
-        let left, right, large;
+        let left, right, max;
 
         if (index * 2 + 1 < this.arr.length) { // root.left index
             left = this.arr[index * 2 + 1];
@@ -58,15 +58,15 @@ class Heap { // max Heap
                 right = this.arr[index * 2 + 2];
             }
 
-            if (left > right) large = index * 2 + 1;
-            else large = index * 2 + 2;
+            if (left > right) max = index * 2 + 1;
+            else max = index * 2 + 2;
 
-            if (this.arr[index] < this.arr[large]) {
+            if (this.arr[index] < this.arr[max]) {
                 let tmp = this.arr[index];
-                this.arr[index] = this.arr[large];
-                this.arr[large] = tmp;
+                this.arr[index] = this.arr[max];
+                this.arr[max] = tmp;
 
-                this._heapDown(large);
+                this._heapDown(max);
             }
         }
     }

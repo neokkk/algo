@@ -45,23 +45,6 @@ class LinkedList {
 
 		this.length--;
 	}
-
-	display() {
-		if (this.length === 0) return null;
-
-		let currentNode = this.head;
-		console.log(currentNode.data);
-
-		while (currentNode.next) {
-			currentNode = currentNode.next;
-			console.log(currentNode.data);
-		}
-	}
-
-	length() {
-		console.log(this.length);
-		return this.length;
-	}
 }
 
 const ll = new LinkedList();

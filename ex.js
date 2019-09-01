@@ -1,76 +1,59 @@
-class Node {
-	constructor(data) {
-		this.data = data;
-		this.next;
-	}
-}
-
-class LinkedList {
+class Heap {
 	constructor() {
-		this.head;
-		this.length = 0;
+		this.arr = [];
 	}
 
 	insert(data) {
-		const node = new Node(data);
+		const last = this.arr.length - 1;
 
-		if (this.length === 0) {
-			this.head = node;
-		} else {
-			let currentNode = this.head;
+		this.arr[last] = data;
 
-			while (currentNode.next) {
-				currentNode = currentNode.next;
+		this._heapUp(last);
+	}
+
+	_heapUp(index) {
+		let parent = parseInt((index - 1) / 2);
+
+		if (this.arr[index] > this.arr[parent]) {
+			let tmp = this.arr[index];
+			this.arr[index] = this.arr[parent];
+			this.arr[parent] = tmp;
+
+			this._heapUp(parent);
+		}
+	}
+
+	delete() {
+		if (this.arr.length === 0) return null;
+
+		const del = this.arr[0];
+
+		this.arr[0] = this.arr.pop();
+		this._heapDown(0);
+
+		return del;
+	}
+
+	_heapDown(index) {
+		let left, right, max;
+
+		if (index * 2 + 1 < this.arr.length) {
+			left = index * 2 + 1;
+
+			if (index * 2 + 2 < this.arr.length - 1) {
+				right = index * 2 + 2;
 			}
 
-			currentNode.next = node;
-		}
+			if (left > right) max = index * 2 + 1;
+			else max = index * 2 + 2;
 
-		this.length++;
-	}
+			if (this.arr[index] < this.arr[max]) {
+				let tmp = this.arr[index];
+				this.arr[index] = this.arr[max];
+				this.arr[max] = tmp;
 
-	delete(data) {
-		if (this.length === 0) return null;
-		if (this.head.data === data) {
-			this.head = this.head.next;
-		} else {
-			let currentNode = this.head;
-	
-			while (currentNode.next.data !== data) {
-				currentNode = currentNode.next;
+				this._heapDown(max);
 			}
-	
-			currentNode.next = currentNode.next.next;
 		}
-
-		this.length--;
-	}
-
-	display() {
-		if (this.length === 0) return null;
-
-		let currentNode = this.head;
-		console.log(currentNode.data);
-
-		while (currentNode.next) {
-			currentNode = currentNode.next;
-			console.log(currentNode.data);
-		}
-	}
-
-	length() {
-		console.log(this.length);
-		return this.length;
 	}
 }
-
-const ll = new LinkedList();
-
-ll.insert('hello');
-ll.insert('link');
-ll.insert('hello');
-ll.insert('data');
-ll.delete('hello');
-ll.delete('hello');
-ll.display();
-ll.length();
