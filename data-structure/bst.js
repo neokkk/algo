@@ -23,12 +23,10 @@ class BinarySearchTree {
 	_insert(root, node) {
 		if (node.data < root.data) {
 			root.left = this._insert(root.left, node);
-			return root;
 		}
 
 		if (node.data > root.data) {
 			root.right = this._insert(root.right, node);
-			return root;
 		}
 
 		return root;
