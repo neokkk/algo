@@ -78,9 +78,6 @@ heap.insert(5);
 heap.insert(310);
 heap.insert(120);
 heap.insert(41);
-
 console.log(heap.arr);
-
 heap.delete();
-
-console.log(heap.arr)
+console.log(heap.arr);
