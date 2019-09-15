@@ -1,28 +1,29 @@
 const mergeSort = arr => {
     if (arr.length < 2) return arr;
 
-    let half = Math.floor(arr.length / 2);
-    let left = arr.slice(0, half);
-    let right = arr.slice(half, arr.length);
+    const middleIndex = Math.floor(arr.length / 2);
+
+    const left = arr.slice(0, middleIndex);
+    const right = arr.slice(middleIndex, arr.length);
 
     return merge(mergeSort(left), mergeSort(right));
 }
 
 const merge = (left, right) => {
-    const result = [];
+    const merged = [];
 
     while (left.length && right.length) {
         if (left[0] < right[0]) {
-            result.push(left.shift());
+            merged.push(left.shift());
         } else {
-            result.push(right.shift());
+            merged.push(right.shift());
         }
     }
 
-    while (left.length) result.push(left.shift());
-    while (right.length) result.push(right.shift());
+    while (left.length) merged.push(left.shift());
+    while (right.length) merged.push(right.shift());
 
-    return result;
+    return merged;
 }
 
 console.log(mergeSort([5,1,7,4,6,3,2,8]));
