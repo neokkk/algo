@@ -4,6 +4,7 @@ export function reverseLinkedList(rll) {
 
     while (currentNode) {
         let tmp = currentNode.next;
+        
         currentNode.next = prev;
         prev = currentNode;
 

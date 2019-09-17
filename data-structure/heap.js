@@ -13,7 +13,7 @@ class Heap { // max Heap
     }
 
     delete() {
-        if (this.arr.length === 0) return false;
+        if (this.arr.length < 2) return this.arr.pop();
 
         const del = this.arr[0];
 
@@ -36,7 +36,7 @@ class Heap { // max Heap
     /* recursion */
     _heapUp(index) {
         if (index) {
-            let parent = parseInt((index - 1) / 2); // 부모 node의 index
+            const parent = parseInt((index - 1) / 2); // 부모 node의 index
 
             if (this.arr[index] > this.arr[parent]) { // 부모 node 값보다 크면 교환
                 let tmp = this.arr[index];
