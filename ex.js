@@ -219,14 +219,16 @@ class MinHeap {
         let left, right, smallIndex;
 
         if (index * 2 + 1 < this.arr.length) {
-            left = index * 2 + 1;
+            left = this.arr[index * 2 + 1];
 
             if (index * 2 + 2 < this.arr.length) {
-                right = index * 2 + 2;
+                right = this.arr[index * 2 + 2];
             }
 
-            if (left < right) smallIndex = index * 2 + 1;
+            if (typeof right === 'undefined' || left < right) smallIndex = index * 2 + 1;
             else smallIndex = index * 2 + 2;
+
+            console.log('smallIndex:', smallIndex, ':', this.arr[smallIndex]);
 
             if (this.arr[index] > this.arr[smallIndex]) {
                 let tmp = this.arr[index];

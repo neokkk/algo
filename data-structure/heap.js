@@ -54,7 +54,7 @@ class Heap { // max Heap
         if (index * 2 + 1 < this.arr.length) { // root.left index
             left = this.arr[index * 2 + 1];
 
-            if (index * 2 + 2 < this.arr.length - 1) { // ?
+            if (index * 2 + 2 < this.arr.length) { // ?
                 right = this.arr[index * 2 + 2];
             }
 
