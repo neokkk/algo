@@ -12,25 +12,27 @@ class MinHeap {
 
     _heapUp(index) {
         if (index) {
-            let parent = parseInt((index - 1) / 2);
+            const parentIndex = parseInt((index - 1) / 2);
 
-            if (this.arr[index] < this.arr[parent]) {
+            if (this.arr[index] < this.arr[parentIndex]) {
                 let tmp = this.arr[index];
-                this.arr[index] = this.arr[parent];
-                this.arr[parent] = tmp;
+                this.arr[index] = this.arr[parentIndex];
+                this.arr[parentIndex] = tmp;
 
-                this._heapUp(parent);
+                this._heapUp(parentIndex);
             }
         }
     }
 
     delete() {
-        if (this.arr.length === 0) return null;
+        if (this.arr.length < 2) return this.arr.pop();
 
         const del = this.arr[0];
 
         this.arr[0] = this.arr.pop();
         this._heapDown(0);
+
+        console.log(this.arr);
 
         return del;
     }
@@ -41,12 +43,14 @@ class MinHeap {
         if (index * 2 + 1 < this.arr.length) {
             left = this.arr[index * 2 + 1];
 
-            if (index * 2 + 2 < this.arr.length - 1) {
+            if (index * 2 + 2 < this.arr.length) {
                 right = this.arr[index * 2 + 2];
             }
 
-            if (left < right) smallIndex = index * 2 + 1;
+            if (typeof right === 'undefined' || left < right) smallIndex = index * 2 + 1;
             else smallIndex = index * 2 + 2;
+
+            console.log('smallIndex:', smallIndex, ':', this.arr[smallIndex]);
 
             if (this.arr[index] > this.arr[smallIndex]) {
                 let tmp = this.arr[index];
@@ -58,15 +62,3 @@ class MinHeap {
         }
     }
 }
-
-const mh = new MinHeap();
-
-mh.insert(1);
-mh.insert(4);
-mh.insert(11);
-mh.insert(3);
-mh.insert(8);
-mh.insert(5);
-console.log(mh.arr);
-mh.delete();
-console.log(mh.arr);
