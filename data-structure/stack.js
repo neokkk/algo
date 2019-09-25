@@ -1,51 +1,45 @@
 class Stack {
-    constructor() {
-        this._arr = [];
+    constructor(size) {
+        this.arr = [];
         this.top = -1;
+        this.size = size;
     }
 
-    push (data) {
+    push(data) {
+        if (this.arr.length === this.size) {
+            console.log('This is stack overflow!');
+            return;
+        }
+
         this.top++;
-        this._arr.push(data);
+        this.arr[this.top] = data;
     }
 
-    pop () {
-        if (this.top <= -1) {
-            console.log('This is Stack underflow!');
-            return null;
-        } else {
-            const popped = this._arr[this.top];
+    pop() {
+        if (this.top < 0) {
+            console.log('This is stack underflow...');
+            return;
+        }
 
-            this._arr.splice(this.top);
-            this.top--;
+        const popped = this.arr.splice(this.top)[0];
+        this.top--;
 
-            return popped; 
-        } 
+        return popped;
     }
 
-    peek () {
+    peek() {
         return this.arr[this.top];
-    }
-
-    clear() {
-        this._arr = [];
-        this.top = -1;
     }
 }
 
-const stack = new Stack();
+const stack = new Stack(3);
 
-stack.push(1);
-stack.push(2);
-stack.push(3);
+stack.push('h');
+stack.push('e');
+stack.push('l');
+stack.push('l');
+stack.push('o');
 
-stack.pop();
-stack.pop();
-
-stack.push(4);
-stack.push(5);
-stack.push(6);
-stack.peek();
-
-
-console.log(stack);
+console.log(stack.pop());
+console.log(stack.pop());
+console.log(stack.peek());
