@@ -2,7 +2,9 @@ class Stack {
     constructor(size) {
         this.arr = [];
         this.top = -1;
-        this.size = size;
+
+        if (size) this.size = size;
+        else this.size = 1000000;
     }
 
     push(data) {
@@ -30,16 +32,15 @@ class Stack {
     peek() {
         return this.arr[this.top];
     }
+
+    clear() {
+        this.arr = [];
+    }
+
+    isEmpty() {
+        if (this.top < 0) return true;
+        else return false;
+    }
 }
 
-const stack = new Stack(3);
-
-stack.push('h');
-stack.push('e');
-stack.push('l');
-stack.push('l');
-stack.push('o');
-
-console.log(stack.pop());
-console.log(stack.pop());
-console.log(stack.peek());
+module.exports = Stack;

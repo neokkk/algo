@@ -1,33 +1,32 @@
 class Queue {
-    constructor() {
-        this._arr = [];
+    constructor(size) {
+        this.arr = [];
+
+        if (size) this.size = size;
+        else this.size = 1000000;
     }
 
     enqueue(data) {
-        this._arr.push(data);
-    }
-
-    dequeue() {
-        if (this._arr.length < 0) {
-            console.log('This is Stack Underflow!');
+        if (this.arr.length === this.size) {
+            console.log('This is Queue Overflow!');
             return;
         }
 
-        return this._arr.shift();
+        this.arr.push(data);
+    }
+
+    dequeue() {
+        if (this.arr.length < 0) {
+            console.log('This is Queue Underflow!');
+            return;
+        }
+
+        return this.arr.shift();
     }
 
     clear() {
-        this._arr = [];
+        this.arr = [];
     }
 }
 
-const queue = new Queue();
-
-queue.enqueue(1);
-queue.enqueue(2);
-queue.enqueue(3);
-queue.enqueue(4);
-queue.dequeue();
-queue.dequeue();
-
-console.log(queue);
+module.exports = Queue;

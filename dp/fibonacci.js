@@ -25,8 +25,31 @@ const solution2 = (function() {
     return fbnc;
 })();
 
-const answer1 = solution1(10);
-const answer2 = solution2(10);
+/* array */
+const solution3 = function(n) {
+    const arr = [1, 1];
+    
+    let i = 0;
+    
+    while (i <= n - 2) {
+        arr[i + 2] = arr[i + 1] + arr[i];
+        i++;
+    };
+    
+    return arr[n - 1];
+}
 
-console.log(answer1);
-console.log(answer2);
+console.time();
+solution1(10);
+console.timeEnd();
+// 0.564ms
+
+console.time();
+solution2(10);
+console.timeEnd();
+// 0.123ms
+
+console.time();
+solution3(10);
+console.timeEnd();
+// 0.164ms
