@@ -8,7 +8,7 @@ const solution1 = function(num) {
 const solution2 = (function() {
     const save = [];
     const fact = function(num) {
-        if (num === 0) return 1;
+        if (num === 1) return 1;
         else {
             let saved = save[num - 1] || fact(num - 1);
             let result = num * saved;
