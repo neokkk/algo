@@ -7,20 +7,28 @@ class QueueToStack {
     }
 
     push(data) {
-        this.q1.enqueue(data);
+        if (this.q1.arr.length || (!this.q1.arr.length && !this.q2.arr.length)) {
+            this.q1.enqueue(data);
+        } else {
+            this.q2.enqueue(data);
+        }
     }
 
     pop() {
         if (this.q1.arr.length) {
-            if (this.q1.arr.length === 1) return this.q1.dequeue();
+            if (this.q1.arr.length < 2) {
+                return this.q1.dequeue();
+            }
 
             while (this.q1.arr.length > 1) {
                 this.q2.enqueue(this.q1.dequeue());
             }
 
             return this.q1.dequeue();
-        } else if (this.q2.arr.length) {
-            if (this.q2.arr.length === 1) return this.q2.dequeue();
+        } else {
+            if (this.q2.arr.length < 2) {
+                return this.q2.dequeue();
+            }
 
             while (this.q2.arr.length > 1) {
                 this.q1.enqueue(this.q2.dequeue());
@@ -35,9 +43,8 @@ const qts = new QueueToStack();
 
 qts.push('hello');
 qts.push('queue');
-qts.push('hello');
+qts.push('bye');
 qts.push('stack');
-
 console.log(qts.pop());
 console.log(qts.pop());
 console.log(qts.pop());
