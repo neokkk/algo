@@ -1,2 +1,2 @@
 # Algorithm-examples
-JavaScript algorithm & data-structure examples
+Algorithm & data-structure examples
