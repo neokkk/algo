@@ -26,8 +26,7 @@ void merge(int *arr, int l, int m, int r)
     for (j = 0; j < n2; j++)
         R[j] = arr[m + 1 + j];
 
-    i = 0;
-    j = 0;
+    i = j = 0;
     k = l;
 
     while (i < n1 && j < n2)

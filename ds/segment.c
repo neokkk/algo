@@ -27,7 +27,7 @@ void run_st()
   assert(sum(st, 0, 11, 0, 3, 8) == 41);
 
   update(st, 0, 11, 0, 5, 1);
-  assert(sum(st, 0, 11, 0, 3, 8) == 67);
+  assert(sum(st, 0, 11, 0, 3, 8) == 42);
   print(st, (1 << (st->h + 1)) - 1, 0, 1);
 
   destroy_st(st);
@@ -79,8 +79,8 @@ void update(struct st *st, int start, int end, int node, int idx, int diff)
   if (start != end) {
     mid = (start + end) / 2;
 
-    update(st, start, mid, node * 2 + 1, idx, value);
-    update(st, mid + 1, end, node * 2 + 2, idx, value);
+    update(st, start, mid, node * 2 + 1, idx, diff);
+    update(st, mid + 1, end, node * 2 + 2, idx, diff);
   }
 }
 
