@@ -38,14 +38,12 @@ void run_queue()
 struct queue *create_queue(int size)
 {
     struct queue *queue;
-
     queue = (struct queue *)malloc(sizeof(struct queue));
-    queue->buf = (int *)malloc(sizeof(int) * size);
     queue->size = size;
+    queue->buf = (int *)malloc(sizeof(int) * queue->size);
     queue->count = 0;
     queue->front = 0;
     queue->rear = 0;
-
     return queue;
 }
 
@@ -62,24 +60,19 @@ bool is_full(struct queue *queue)
 bool enqueue(struct queue *queue, int value)
 {
     if (is_full(queue)) return false;
-
     queue->buf[queue->front] = value;
     queue->front = (queue->front + 1) % queue->size;
     queue->count += 1;
-
     return true;
 }
 
 int dequeue(struct queue *queue)
 {
     int result;
-
     if (is_empty(queue)) return -1;
-
     result = queue->buf[queue->rear];
     queue->rear = (queue->rear + 1) % queue->size;
     queue->count -= 1;
-
     return result;
 }
 
