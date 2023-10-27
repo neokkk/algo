@@ -1,7 +1,3 @@
-//
-// Created by nk on 2023/10/25.
-//
-
 #include <algorithm>
 #include <iostream>
 #include <numeric>
