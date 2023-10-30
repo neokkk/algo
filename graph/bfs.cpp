@@ -36,7 +36,7 @@ void bfs(const GraphWithList& graph, int start) {
 }
 
 void runBFS() {
-    GraphWithList g(8);
+    GraphWithList g;
     g.addEdge(1, 2);
     g.addEdge(1, 5);
     g.addEdge(2, 1);

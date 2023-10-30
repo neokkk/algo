@@ -1,19 +1,19 @@
 #include "Graph.h"
 
-int GraphWithList::verticies() const {
+int GraphWithList::vertices() const {
     return this->n;
 }
 
 void GraphWithList::addEdge(int src, int dst, int weight, bool useWeight) {
-    if (!validate(src, dst)) return;
     if (this->isExist(src, dst)) return;
+    ++(this->n);
     this->edges.emplace_back(src, dst, weight);
     if (useWeight) this->edges.emplace_back(dst, src, weight);
 }
 
 void GraphWithList::removeEdge(int src, int dst) {
-    if (!validate(src, dst)) return;
     auto edge = Edge{src, dst, 0};
+    --(this->n);
     std::remove(this->edges.begin(), this->edges.end(), edge);
 }
 
@@ -56,10 +56,6 @@ void GraphWithList::print() const {
 bool GraphWithList::isExist(int src, int dst) {
     Edge tmp{src, dst, 0};
     return std::find(this->edges.begin(), this->edges.end(), tmp) != this->edges.end();
-}
-
-bool GraphWithList::validate(int src, int dst) {
-    return (src >= 0 && src < n && dst >= 0 || dst < n);
 }
 
 GraphWithMatrix::GraphWithMatrix(int _n): n{_n} {

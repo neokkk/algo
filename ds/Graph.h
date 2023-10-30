@@ -1,7 +1,3 @@
-//
-// Created by nk on 2023/10/27.
-//
-
 #ifndef ALGO_GRAPH_H
 #define ALGO_GRAPH_H
 
@@ -25,7 +21,7 @@ struct Edge {
     }
 
     bool operator == (const Edge& rhs) const {
-        return src == rhs.src && dst == rhs.dst;
+        return this->src == rhs.src && this->dst == rhs.dst;
     }
 
     bool operator > (const Edge& rhs) const {
@@ -38,9 +34,9 @@ struct Edge {
 };
 
 struct GraphWithList {
-    GraphWithList(int _n): n{_n} {}
+    GraphWithList() = default;
 
-    int verticies() const;
+    int vertices() const;
     void addEdge(int src, int dst, int weight = 0, bool useWeight = false);
     void removeEdge(int src, int dst);
     const std::vector<Edge>& getEdges() const;
@@ -48,10 +44,9 @@ struct GraphWithList {
     std::vector<int> getStartEdgeIds() const;
     void print() const;
     bool isExist(int src, int dst);
-    bool validate(int src, int dst);
 
     private:
-    int n;
+    int n = -1;
     std::vector<Edge> edges;
 };
 
@@ -70,7 +65,7 @@ struct GraphWithMatrix {
     private:
     int n;
     std::vector<std::vector<std::pair<int, int>>> edges;
+    void dfs(std::vector<int>& visited, int index, int count, int limit);
 };
-
 
 #endif //ALGO_GRAPH_H
