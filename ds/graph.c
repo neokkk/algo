@@ -2,25 +2,28 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "disjoint_set.c"
+
+#define BASE 10
 
 #define non_mem_alloc() do { \
-  perror("fail to allocate memory"); \
-  exit(1); \
+    perror("fail to allocate memory"); \
+    exit(1); \
 } while (0)
 
 struct mg {
-  int row, column;
-  int **matrix;
+    int row, column;
+    int **matrix;
 };
 
 struct node {
-  int value, to;
-  struct node *prev, *next;
+    int from, to, value;
+    struct node *prev, *next;
 };
 
 struct lg {
-  int n;
-  struct node **list;
+    int size;
+    struct node **arr;
 };
 
 struct mg *create_mg(int r, int c);
@@ -31,259 +34,255 @@ bool validate_mg_range(struct mg *mg, int r, int c);
 void print_mg(struct mg *mg);
 void destroy_mg(struct mg *mg);
 
-struct lg *create_lg(int n);
-struct node *create_node(int to, int value);
-bool insert_lg_value(struct lg *lg, int a, int b, int value);
-struct node *get_lg_node(struct lg *lg, int a, int b);
-int get_lg_value(struct lg *lg, int a, int b);
-bool remove_lg_value(struct lg *lg, int a, int b);
-bool validate_lg_range(struct lg *lg, int a, int b);
+struct lg *create_lg();
+struct node *create_node(int from, int to, int value);
+bool is_same_node(struct node *a, struct node *b);
+struct node *find_lg_node(struct lg *lg, int from);
+bool insert_lg_value(struct lg *lg, int from, int to, int value);
+struct node *get_lg_node(struct lg *lg, int from, int to);
+int get_lg_value(struct lg *lg, int from, int to);
+bool remove_lg_value(struct lg *lg, int from, int to);
 void print_lg(struct lg *lg);
 void destroy_lg(struct lg *lg);
 
 void run_mg()
 {
-  struct mg *mg;
+    struct mg *mg;
 
-  mg = create_mg(5, 4);
-  insert_mg_value(mg, 1, 0, 5);
-  assert(get_mg_value(mg, 1, 0) == 5);
-  assert(insert_mg_value(mg, 1, 5, 3) == false);
-  insert_mg_value(mg, 1, 3, 4);
-  insert_mg_value(mg, 3, 2, 8);
-  insert_mg_value(mg, 4, 4, 7);
-  assert(remove_mg_value(mg, 1, 2) == false);
-  print_mg(mg);
-  destroy_mg(mg);
+    mg = create_mg(5, 4);
+    insert_mg_value(mg, 1, 0, 5);
+    assert(get_mg_value(mg, 1, 0) == 5);
+    assert(insert_mg_value(mg, 1, 5, 3) == false);
+    insert_mg_value(mg, 1, 3, 4);
+    insert_mg_value(mg, 3, 2, 8);
+    insert_mg_value(mg, 4, 4, 7);
+    assert(remove_mg_value(mg, 1, 2) == false);
+    print_mg(mg);
+    destroy_mg(mg);
 }
 
 void run_lg()
 {
-  struct lg *lg;
+    struct lg *lg;
 
-  lg = create_lg(5);
-  assert(insert_lg_value(lg, 0, 1, 4) == true);
-  insert_lg_value(lg, 2, 2, 5);
-  insert_lg_value(lg, 2, 3, 8);
-  assert(get_lg_value(lg, 2, 2) == 5);
-  insert_lg_value(lg, 2, 1, 6);
-  assert(insert_lg_value(lg, 3, 5, 1) == false);
-  insert_lg_value(lg, 1, 0, 2);
-  assert(insert_lg_value(lg, 1, 0, 2) == false);
-  remove_lg_value(lg, 2, 3);
-  assert(remove_lg_value(lg, 4, 3) == false);
-  print_lg(lg);
-  destroy_lg(lg);
+    lg = create_lg();
+    insert_lg_value(lg, 0, 1, 4);
+    insert_lg_value(lg, 2, 2, 5);
+    insert_lg_value(lg, 2, 3, 8);
+    assert(get_lg_value(lg, 2, 2) == 5);
+    insert_lg_value(lg, 2, 1, 6);
+    insert_lg_value(lg, 3, 5, 1);
+    insert_lg_value(lg, 1, 0, 2);
+    assert(insert_lg_value(lg, 1, 0, 2) == false);
+    remove_lg_value(lg, 2, 3);
+    assert(remove_lg_value(lg, 4, 3) == false);
+    print_lg(lg);
+    destroy_lg(lg);
 }
 
 struct mg *create_mg(int r, int c)
 {
-  struct mg *mg;
+    struct mg *mg;
 
-  mg = (struct mg *)malloc(sizeof(struct mg));
-  if (mg == NULL) non_mem_alloc();
+    mg = (struct mg *)malloc(sizeof(struct mg));
+    if (mg == NULL) non_mem_alloc();
 
-  mg->row = r;
-  mg->column = c;
-  mg->matrix = (int **)malloc(sizeof(int *) * r);
+    mg->row = r;
+    mg->column = c;
+    mg->matrix = (int **)malloc(sizeof(int *) * r);
 
-  for (int i = 0; i < mg->row; i++) {
-    mg->matrix[i] = (int *)calloc(mg->column, sizeof(int));
-    if (mg->matrix[i] == NULL) non_mem_alloc();
-  }
+    for (int i = 0; i < mg->row; i++) {
+        mg->matrix[i] = (int *)calloc(mg->column, sizeof(int));
+        if (mg->matrix[i] == NULL) non_mem_alloc();
+    }
 
-  return mg;
+return mg;
 }
 
 int get_mg_value(struct mg *mg, int r, int c)
 {
-  if (!validate_mg_range(mg, r, c)) return -1;
-  return mg->matrix[r][c];
+    if (!validate_mg_range(mg, r, c)) return -1;
+    return mg->matrix[r][c];
 }
 
 bool insert_mg_value(struct mg *mg, int r, int c, int value)
 {
-  if (!validate_mg_range(mg, r, c)) return false;
-  mg->matrix[r][c] = value;
-  return true;
+    if (!validate_mg_range(mg, r, c)) return false;
+    mg->matrix[r][c] = value;
+    return true;
 }
 
 bool remove_mg_value(struct mg *mg, int r, int c)
 {
-  if (!validate_mg_range(mg, r, c)) return false;
-  mg->matrix[r][c] = 0;
+    if (!validate_mg_range(mg, r, c)) return false;
+    mg->matrix[r][c] = 0;
 }
 
 bool validate_mg_range(struct mg *mg, int r, int c)
 {
-  if (r >= mg->row || c >= mg->column) return false;
-  if (r < 0 || c < 0) return false;
-  return true;
+    if (r >= mg->row || c >= mg->column) return false;
+    if (r < 0 || c < 0) return false;
+    return true;
 }
 
 void print_mg(struct mg *mg)
 {
-  for (int i = 0; i < mg->row; i++) {
-    for (int j = 0; j < mg->column; j++) {
-      printf("%d ", mg->matrix[i][j]);
+    for (int i = 0; i < mg->row; i++) {
+        for (int j = 0; j < mg->column; j++)
+            printf("%d ", mg->matrix[i][j]);
+        printf("\n");
     }
-    printf("\n");
-  }
 }
 
 void destroy_mg(struct mg *mg)
 {
-  for (int i = 0; i < mg->row; i++)
-    free(mg->matrix[i]);
-  free(mg->matrix);
-  free(mg);
+    for (int i = 0; i < mg->row; i++)
+        free(mg->matrix[i]);
+    free(mg->matrix);
+    free(mg);
 }
 
-struct lg *create_lg(int n)
+struct lg *create_lg()
 {
-  struct lg *lg;
+    struct lg *lg;
 
-  lg = (struct lg *)malloc(sizeof(struct lg));
-  if (lg == NULL) non_mem_alloc();
-  lg->n = n;
-  lg->list = (struct node **)malloc(sizeof(struct node *) * n);
-  if (lg->list == NULL) non_mem_alloc();
+    lg = (struct lg *)malloc(sizeof(struct lg));
+    if (lg == NULL) non_mem_alloc();
+    lg->size = 0;
+    lg->arr = (struct node **)malloc(sizeof(struct node *) * BASE);
+    if (lg->arr == NULL) non_mem_alloc();
 
-  for (int i = 0; i < lg->n; i++)
-    lg->list[i] = NULL;
-
-  return lg;
+    return lg;
 }
 
-struct node *create_node(int to, int value)
+struct node *create_node(int from, int to, int value)
 {
-  struct node *node;
+    struct node *node;
 
-  node = (struct node *)malloc(sizeof(struct node));
-  if (node == NULL) non_mem_alloc();
-  node->value = value;
-  node->to = to;
-  node->prev = node->next = NULL;
+    node = (struct node *)malloc(sizeof(struct node));
+    if (node == NULL) non_mem_alloc();
+    node->from = from;
+    node->to = to;
+    node->value = value;
+    node->prev = node->next = NULL;
 
-  return node;
+    return node;
 }
 
-bool insert_lg_value(struct lg *lg, int a, int b, int value)
+bool is_same_node(struct node *a, struct node *b)
 {
-  struct node *node, *last;
+    if (a->from == b->from && a->to == b->to) return true;
+    return false;
+}
 
-  if (!validate_lg_range(lg, a, b)) return false;
-
-  node = create_node(b, value);
-  last = lg->list[a];
-
-  if (last == NULL) {
-    lg->list[a] = node;
-  } else {
-    if (last->to == b) {
-      free(node);
-      return false;
-    }
-    while (last->next != NULL) {
-      last = last->next;
+struct node *find_lg_node(struct lg *lg, int from)
+{
+    for (int i = 0; i < lg->size; i++) {
+        if (lg->arr[i]->from == from) return lg->arr[i];
     }
 
-    node->prev = last;
-    last->next = node;
-  }
-
-  return true;
+    return NULL;
 }
 
-struct node *get_lg_node(struct lg *lg, int a, int b)
+bool insert_lg_value(struct lg *lg, int from, int to, int value)
 {
-  struct node *node;
+    struct node *node, *last;
 
-  if (!validate_lg_range(lg, a, b)) return NULL;
+    if (lg->size > 0 && lg->size % BASE == 0) {
+        struct node **tmp = realloc(lg->arr, sizeof(struct node *) * (lg->size + BASE));
+        if (tmp == NULL) non_mem_alloc();
+        lg->arr = tmp;
+    }
 
-  node = lg->list[a];
-  if (node == NULL) return false;
+    node = create_node(from, to, value);
+    last = find_lg_node(lg, from);
 
-  while (node->to != b) {
+    if (last != NULL) {
+        if (is_same_node(node, last)) return false;
+        while (last->next != NULL) {
+            last = last->next;
+            if (is_same_node(node, last)) return false;
+        }
+        node->prev = last;
+        last->next = node;
+    }
+
+    lg->arr[lg->size++] = node;
+    return true;
+}
+
+struct node *get_lg_node(struct lg *lg, int from, int to)
+{
+    struct node *node;
+
+    node = find_lg_node(lg, from);
+    if (node == NULL) return NULL;
+
+    while (node->to != to) {
+        if (node == NULL) return NULL;
+        node = node->next;
+    }
+
+    return node;
+}
+
+int get_lg_value(struct lg *lg, int from, int to)
+{
+    struct node *node;
+    node = get_lg_node(lg, from, to);
+    if (node == NULL) return -1;
+    return node->value;
+}
+
+bool remove_lg_value(struct lg *lg, int from, int to)
+{
+    struct node *node;
+
+    if (lg->size <= 0) return false;
+
+    node = get_lg_node(lg, from, to);
     if (node == NULL) return false;
-    node = node->next;
-  }
 
-  return node;
-}
+    if (node->prev != NULL)
+        node->prev->next = node->next;
 
-int get_lg_value(struct lg *lg, int a, int b)
-{
-  struct node *node;
+    if (node->next != NULL)
+        node->next->prev = node->prev;
 
-  node = get_lg_node(lg, a, b);
-
-  if (node == NULL) return -1;
-
-  return node->value;
-}
-
-bool remove_lg_value(struct lg *lg, int a, int b)
-{
-  struct node *node;
-
-  if (!validate_lg_range(lg, a, b)) return false;
-
-  node = lg->list[a];
-  if (node == NULL) return false;
-
-  while (node->to != b) {
-    if (node == NULL) return false;
-    node = node->next;
-  }
-
-  node->prev->next = node->next;
-  if (node->next != NULL)
-    node->next->prev = node->prev;
-
-  free(node);
-
-  return true;
-}
-
-bool validate_lg_range(struct lg *lg, int a, int b)
-{
-  if (a >= lg->n || b >= lg->n) return false;
-  if (a < 0 || b < 0) return false;
-  return true;
+    free(node);
+    return true;
 }
 
 void print_lg(struct lg *lg)
 {
-  struct node *current;
+    struct node *current;
+    struct ds *ds;
+    int *ids;
+    int size;
 
-  for (int i = 0; i < lg->n; i++) {
-    printf("%d: ", i);
-    current = lg->list[i];
-    while (current != NULL) {
-      printf("-> %d(%d) ", current->to, current->value);
-      current = current->next;
+    ds = create_ds();
+
+    for (int i = 0; i < lg->size; i++) {
+        int from = lg->arr[i]->from;
+        make_set(ds, from);
     }
-    printf("\n");
-  }
+
+    ids = get_all_ids(ds, &size);
+    for (int i = 0; i < size; i++) {
+        printf("%d", ids[i]);
+        current = find_lg_node(lg, ids[i]);
+        while (current != NULL) {
+            printf(" -> %d(%d)", current->to, current->value);
+            current = current->next;
+        }
+        printf("\n");
+    }
+
+    destroy_ds(ds);
 }
 
 void destroy_lg(struct lg *lg)
 {
-  struct node *current, *next;
-
-  for (int i = 0; i < lg->n; i++) {
-    current = lg->list[i];
-
-    if (current == NULL) continue;
-
-    while (current->next != NULL) {
-      next = current->next;
-      free(current);
-      current = next;
-    }
-  }
-
-  free(lg->list);
-  free(lg);
+    free(lg->arr);
+    free(lg);
 }
